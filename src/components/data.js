@@ -1,14 +1,14 @@
-export const data = {
+export const boardData = {
   lanes: [
     {
-      id: 'lane1',
+      id: 'planned',
       title: 'Planned',
       cards: [
         {
           id: 'Card1',
           title: 'Write Blog',
           description: 'Can AI make memes',
-          due: '30/12/2020',
+          due: '2020-12-30',
           assignedTo: 'James'
         },
         {
@@ -16,7 +16,7 @@ export const data = {
           title: 'Pay Rent',
           description: 'Transfer via NEFT',
           assignedTo: 'Jeny',
-          due: '20/12/2020'
+          due: '2020-12-20'
         },
         {
           id: 'Card3',
@@ -28,14 +28,13 @@ export const data = {
       ],
     },
     {
-      id: 'lane2',
+      id: 'started',
       title: 'Started',
       cards: [],
     },
     {
-      id: 'lane3',
+      id: 'done',
       title: 'Done',
-      label: '0/0',
       cards: [],
     },
   ],
