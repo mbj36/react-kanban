@@ -125,6 +125,10 @@ function Home() {
                               card.description
                             )
                           }
+                          onDrop={() => {
+                            console.log('Drag done');
+                          }}
+                          onDragStart={(e) => console.log('Drag Start')}
                         />
                       );
                     })}
@@ -162,7 +166,7 @@ function Home() {
         style={customStyles}
       >
         <div className="flex justify-between m-4">
-          <div className="font-bold text-lg">Add Task</div>
+          <div className="font-bold text-lg">Task</div>
           <button onClick={() => setIsOpen(false)}>
             <svg
               height="20px"
@@ -227,7 +231,7 @@ function Home() {
               onClick={(e) => addTask(e)}
               className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
             >
-              Add Task
+              Save
             </button>
           </div>
         </form>
