@@ -143,7 +143,15 @@ function Home() {
                           onDrop={() => {
                             console.log('Drag done');
                           }}
-                          onDragStart={(e) => console.log('Drag Start')}
+                          onDragStart={(e) =>
+                            e.dataTransfer.setData('taskName', {
+                              id: card.id,
+                              title: card.title,
+                              assignedTo: card.assignedTo,
+                              due: card.due,
+                              description: card.description,
+                            })
+                          }
                         />
                       );
                     })}
