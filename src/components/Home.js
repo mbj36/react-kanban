@@ -119,6 +119,32 @@ function Home() {
                 <div
                   key={index}
                   className="w-1/5 ml-10 px-4 text-white rounded pt-2 pb-4 font-bold bg-blue-600"
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    let taskObject = JSON.parse(e.dataTransfer.getData('card'));
+
+                    // taskObject = { ...taskObject,  };
+                    let newData = [...data];
+
+                    newData.filter((ele) =>
+                      ele.cards.filter(
+                        (card, i) =>
+                          card.id === taskObject.id && ele.cards.splice(i, 1)
+                      )
+                    );
+
+                    taskObject = { ...taskObject, taskState: ele.id };
+
+                    if (
+                      newData.filter((ele) => ele.id === taskObject.taskState)
+                    ) {
+                      newData
+                        .filter((ele) => ele.id === taskObject.taskState)[0]
+                        .cards.push(taskObject);
+                    }
+
+                    setData(newData);
+                  }}
                 >
                   {ele.title}
 
@@ -140,18 +166,19 @@ function Home() {
                               card.description
                             )
                           }
-                          onDrop={() => {
-                            console.log('Drag done');
+                          onDragStart={(e) => {
+                            e.dataTransfer.setData(
+                              'card',
+                              JSON.stringify({
+                                id: card.id,
+                                title: card.title,
+                                assignedTo: card.assignedTo,
+                                due: card.due,
+                                taskState: ele.id,
+                                description: card.description,
+                              })
+                            );
                           }}
-                          onDragStart={(e) =>
-                            e.dataTransfer.setData('taskName', {
-                              id: card.id,
-                              title: card.title,
-                              assignedTo: card.assignedTo,
-                              due: card.due,
-                              description: card.description,
-                            })
-                          }
                         />
                       );
                     })}
