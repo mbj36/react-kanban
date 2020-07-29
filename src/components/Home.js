@@ -27,11 +27,13 @@ function Home() {
   const [date, setDate] = useState('');
   const [taskState, setTaskState] = useState('planned');
   const [assignedTo, setAssignedTo] = useState('jeny');
+  const [edit, setEdit] = useState(false);
+  const [cardId, setCardId] = useState(null);
 
   const addTask = (e) => {
     e.preventDefault();
     const constructedStructure = {
-      id: 'Card1',
+      id: Math.random() * 1000,
       title,
       description,
       assignedTo,
@@ -54,41 +56,53 @@ function Home() {
     setIsOpen(false);
   };
 
-  const editTask = (title, assignedTo, due, taskState, description) => {
+  const editTask = (id, title, assignedTo, due, taskState, description) => {
+    setEdit(true);
     setTitle(title);
     setDescription(description);
     setAssignedTo(assignedTo);
     setDate(due);
-    setTaskState(taskState);
+    setTaskState(taskState.toLowerCase());
+    setCardId(id);
     setIsOpen(true);
-
-    // const constructedStructure = {
-    //   id: 'Card1',
-    //   title,
-    //   description,
-    //   assignedTo,
-    //   due: date,
-    // };
-
-    // let newData = [...data];
-
-    // if (newData.filter((ele) => ele.id === taskState)) {
-    //   newData
-    //     .filter((ele) => ele.id === taskState)[0]
-    //     .cards.push(constructedStructure);
-    // }
-
-    // setData(newData);
-
-    // setTitle('');
-    // setDescription('');
-    // setDate('');
-    // setTaskState('');
-    // setAssignedTo('');
-    // setIsOpen(false);
   };
 
-  //   console.log(data);
+  const editSave = (e) => {
+    e.preventDefault();
+
+    const constructedStructure = {
+      id: Math.random() * 1000,
+      title,
+      description,
+      assignedTo,
+      due: date,
+    };
+
+    let newData = [...data];
+
+    if (newData.filter((ele) => ele.id === taskState)) {
+      newData
+        .filter((ele) => ele.id === taskState)[0]
+        .cards.push(constructedStructure);
+    }
+
+    newData.filter((ele) =>
+      ele.cards.filter(
+        (card, i) => card.id === cardId && ele.cards.splice(i, 1)
+      )
+    );
+
+    setData(newData);
+
+    setTitle('');
+    setDescription('');
+    setDate('');
+    setTaskState('planned');
+    setAssignedTo('james');
+    setCardId(null);
+    setIsOpen(false);
+  };
+
   return (
     <div>
       <div className="flex mb-4">
@@ -118,6 +132,7 @@ function Home() {
                           due={card.due}
                           onClick={() =>
                             editTask(
+                              card.id,
                               card.title,
                               card.assignedTo,
                               card.due,
@@ -162,12 +177,22 @@ function Home() {
       <Modal
         isOpen={modalIsOpen}
         // onAfterOpen={afterOpenModal}
-        onRequestClose={() => setIsOpen(false)}
+        onRequestClose={() => {
+          setIsOpen(false);
+          setEdit(false);
+        }}
         style={customStyles}
       >
         <div className="flex justify-between m-4">
-          <div className="font-bold text-lg">Task</div>
-          <button onClick={() => setIsOpen(false)}>
+          <div className="font-bold text-lg">
+            {edit ? 'Edit Task' : 'Add Task'}
+          </div>
+          <button
+            onClick={() => {
+              setIsOpen(false);
+              setEdit(false);
+            }}
+          >
             <svg
               height="20px"
               xmlns="http://www.w3.org/2000/svg"
@@ -228,7 +253,9 @@ function Home() {
 
           <div className="text-center mt-2">
             <button
-              onClick={(e) => addTask(e)}
+              onClick={(e) => {
+                edit ? editSave(e) : addTask(e);
+              }}
               className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
             >
               Save
